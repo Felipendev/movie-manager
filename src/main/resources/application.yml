@@ -1,0 +1,7 @@
+server:
+  servlet:
+    context-path: /movie-manager
+
+springdoc:
+  swagger-ui:
+    path: /public
