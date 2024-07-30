@@ -4,7 +4,9 @@ server:
 
 springdoc:
   swagger-ui:
-    path: /public
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
 
 spring:
   datasource:
