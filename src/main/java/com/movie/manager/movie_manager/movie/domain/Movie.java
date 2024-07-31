@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @ToString
@@ -17,7 +18,7 @@ public class Movie {
     private String title;
     private String rating;
     @Enumerated(EnumType.STRING)
-    private GenreEnum genre;
+    List<GenreEnum> genre;
     private LocalDate year;
     private String director;
     private String language;

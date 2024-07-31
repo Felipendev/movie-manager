@@ -1,22 +1,23 @@
-package com.movie.manager.movie_manager.movie.application.response;
+package com.movie.manager.movie_manager.serie.application.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.movie.manager.movie_manager.utils.GenreEnum;
 import com.movie.manager.movie_manager.utils.GenreEnumDeserializer;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.Value;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Value
-public class MovieResponse {
+public class SeriesResponse {
     @JsonProperty("Title")
     String title;
+    @JsonProperty("TotalSeasons")
+    Integer totalSeasons;
     @JsonProperty("Rated")
     String rating;
+    @JsonProperty("Plot")
+    String plot;
     @JsonProperty("Genre")
     @JsonDeserialize(using = GenreEnumDeserializer.class)
     List<GenreEnum> genre;

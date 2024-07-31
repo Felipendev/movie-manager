@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
@@ -18,7 +20,7 @@ public class Series {
     private String rating;
     private String plot;
     @Enumerated(EnumType.STRING)
-    private GenreEnum genre;
+    private List<GenreEnum> genre;
     private LocalDate year;
     private String director;
     private String language;
