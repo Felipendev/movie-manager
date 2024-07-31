@@ -5,20 +5,17 @@ import com.movie.manager.movie_manager.movie.application.response.MovieResponse;
 import com.movie.manager.movie_manager.movie.application.service.SearchMovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/movies")
 @Log4j2
-public class SearchMovieAPI {
+public class SearchMovieRestController implements SeachMovieAPI {
 
     private final SearchMovieService searchMovieService;
 
-    @GetMapping("/{title}")
+    @Override
     public MovieResponse getMovieByTitle(@PathVariable String title) {
         log.info("[start] - SearchMovieAPI - getMovieByTitle");
         log.info("[title] {} ", title);
