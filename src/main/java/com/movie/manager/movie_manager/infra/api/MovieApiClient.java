@@ -1,16 +1,12 @@
 package com.movie.manager.movie_manager.infra.api;
 
 import com.movie.manager.movie_manager.movie.application.response.MovieResponse;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@Component
-public class MovieApiClient {
-    private final String apiUrl = "http://www.omdbapi.com/?i=tt3896198&apikey=7a4f2c81";
-
-    private MovieResponse getMovieByTitle(String title) {
-        RestTemplate template = new RestTemplate();
-        String url = apiUrl +  "&t=" + title;
-        return template.getForObject(url,MovieResponse.class);
-    }
+@FeignClient(name = "${omdb.name}", url = "${omdb.url}")
+public interface MovieApiClient {
+    @GetMapping
+    MovieResponse getMovieByTitle(@RequestParam("apikey") String apiKey, @RequestParam("t") String title);
 }
