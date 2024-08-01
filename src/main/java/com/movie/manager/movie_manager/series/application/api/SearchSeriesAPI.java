@@ -1,6 +1,6 @@
-package com.movie.manager.movie_manager.serie.application.api;
+package com.movie.manager.movie_manager.series.application.api;
 
-import com.movie.manager.movie_manager.serie.application.response.SeriesResponse;
+import com.movie.manager.movie_manager.series.application.response.SeriesResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

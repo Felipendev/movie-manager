@@ -1,7 +1,7 @@
-package com.movie.manager.movie_manager.serie.application.api;
+package com.movie.manager.movie_manager.series.application.api;
 
-import com.movie.manager.movie_manager.serie.application.response.SeriesResponse;
-import com.movie.manager.movie_manager.serie.application.service.SearchSeriesService;
+import com.movie.manager.movie_manager.series.application.response.SeriesResponse;
+import com.movie.manager.movie_manager.series.application.service.SearchSeriesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RestController;

@@ -15,12 +15,12 @@ public class SearchMovieApplicationService implements SearchMovieService {
     private final MovieFeignClient movieFeignClient;
 
     @Value("${omdb.movie.apikey}")
-    private String apikey;
+    private String API_KEY;
 
     @Override
     public MovieResponse findMovieByTitle(String title) {
         log.info("[start] SearchMovieApplicationService - findMovieByTitle");
-        MovieResponse movie = movieFeignClient.findByTitle(apikey, title);
+        MovieResponse movie = movieFeignClient.findByTitle(API_KEY, title);
         log.info("[finish] SearchMovieApplicationService - findMovieByTitle");
         return movie;
     }

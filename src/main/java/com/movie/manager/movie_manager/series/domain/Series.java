@@ -1,4 +1,4 @@
-package com.movie.manager.movie_manager.serie.domain;
+package com.movie.manager.movie_manager.series.domain;
 
 import com.movie.manager.movie_manager.utils.GenreEnum;
 import jakarta.persistence.EnumType;

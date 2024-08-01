@@ -1,4 +1,4 @@
-package com.movie.manager.movie_manager.serie.application.response;
+package com.movie.manager.movie_manager.series.application.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
