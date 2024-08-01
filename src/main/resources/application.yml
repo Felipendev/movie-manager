@@ -24,6 +24,11 @@ spring:
       path: /h2-console
 
 omdb:
-  name: movieApiClient
-  url: http://www.omdbapi.com
-  apikey: 7a4f2c81
+  movie:
+    name: movieApiClient
+    url: http://www.omdbapi.com
+    apikey: 7a4f2c81
+  series:
+    name: seriesApiClient
+    url: http://www.omdbapi.com
+    apikey: 7a4f2c81
