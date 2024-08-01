@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.movie.manager.movie_manager.utils.GenreEnum;
 import com.movie.manager.movie_manager.utils.GenreEnumDeserializer;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.Value;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Value
