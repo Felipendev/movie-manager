@@ -6,11 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum GenreEnum {
-    ACTION,
-    CRIME,
-    DRAMA,
-    ROMANCE,
-    HORROR,
-    COMEDY,
-    ADVENTURE
+    ACTION, COMEDY, DRAMA, HORROR, ROMANCE, THRILLER, FANTASY, DOCUMENTARY, ADVENTURE
 }

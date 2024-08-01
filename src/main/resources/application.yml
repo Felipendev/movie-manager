@@ -4,4 +4,31 @@ server:
 
 springdoc:
   swagger-ui:
-    path: /public
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+omdb:
+  movie:
+    name: movieApiClient
+    url: http://www.omdbapi.com
+    apikey: 7a4f2c81
+  series:
+    name: seriesApiClient
+    url: http://www.omdbapi.com
+    apikey: 7a4f2c81
