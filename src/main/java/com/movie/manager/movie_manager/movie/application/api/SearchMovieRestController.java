@@ -19,7 +19,7 @@ public class SearchMovieRestController implements SeachMovieAPI {
     public MovieResponse getMovieByTitle(@PathVariable String title) {
         log.info("[start] - SearchMovieAPI - getMovieByTitle");
         log.info("[title] {} ", title);
-        MovieResponse movie = searchMovieService.findMovieByTitle(title);                ;
+        MovieResponse movie = searchMovieService.findMovieByTitle(title);
         log.info("[finish] - SearchMovieAPI - getMovieByTitle");
         return movie;
     }
