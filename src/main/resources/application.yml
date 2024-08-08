@@ -32,3 +32,7 @@ omdb:
     name: seriesApiClient
     url: http://www.omdbapi.com
     apikey: 7a4f2c81
+  episode:
+    name: episodeApiClient
+    url: http://www.omdbapi.com
+    apikey: 7a4f2c81
