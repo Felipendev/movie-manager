@@ -10,4 +10,7 @@ public interface SearchEpisodeService {
     SeasonResponse findByTitle(String title, int season);
     List<EpisodeResponse> getEpisodeList(String title, int totalSeasons);
     List<EpisodeResponse> getEpisodesAfterDate(String title, int totalSeasons, LocalDate date);
+    List<EpisodeResponse> getEpisodesByRating(String title, int totalSeasons);
+    String findSeasonByEpisodeTitle(String episodeTitle, int totalSeasons, String title);
+    List<String> getTopSeasons(String title, int totalSeasons);
 }

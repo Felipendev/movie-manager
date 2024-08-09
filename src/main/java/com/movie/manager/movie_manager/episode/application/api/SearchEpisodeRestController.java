@@ -40,4 +40,28 @@ public class SearchEpisodeRestController implements SearchEpisodeAPI {
         return episodesByDate;
     }
 
+    @Override
+    public List<EpisodeResponse> getTopFiveEpisodes(String title, int totalSeasons) {
+        log.info("[start] SearchEpisodeRestController - getTopFiveEpisodes");
+        List<EpisodeResponse> episodesByRating = searchEpisodeService.getEpisodesByRating(title, totalSeasons);
+        log.info("[finish] SearchEpisodeRestController - getTopFiveEpisodes");
+        return episodesByRating;
+    }
+
+    @Override
+    public List<String> getTopSeasons(String title, int totalSeasons) {
+        log.info("[start] SearchEpisodeRestController - getTopSeasons");
+        List<String> topSeasons = searchEpisodeService.getTopSeasons(title, totalSeasons);
+        log.info("[finish] SearchEpisodeRestController - getTopSeasons");
+        return topSeasons;
+    }
+
+    @Override
+    public String getSeasonByTitle(String episodeTitle, int totalSeasons, String title) {
+        log.info("[start] SearchEpisodeRestController - getSeasonByTitle");
+        String seasonNumber = searchEpisodeService.findSeasonByEpisodeTitle(episodeTitle, totalSeasons, title);
+        log.info("[finish] SearchEpisodeRestController - getSeasonByTitle");
+        return seasonNumber;
+    }
+
 }
