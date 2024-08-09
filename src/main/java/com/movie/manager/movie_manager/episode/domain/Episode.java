@@ -43,7 +43,7 @@ public class Episode {
         return this.rating != null ? this.rating.toString() : "N/A";
     }
     public String getFormattedYear() {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMMM/yyyy");
         return this.yeah != null ? this.yeah.format(formatter) : "N/A";
     }
 }
