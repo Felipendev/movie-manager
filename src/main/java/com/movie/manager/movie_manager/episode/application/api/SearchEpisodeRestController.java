@@ -2,6 +2,7 @@ package com.movie.manager.movie_manager.episode.application.api;
 
 import com.movie.manager.movie_manager.episode.application.response.EpisodeResponse;
 import com.movie.manager.movie_manager.episode.application.response.SeasonResponse;
+import com.movie.manager.movie_manager.episode.application.response.SeriesStatisticsResponse;
 import com.movie.manager.movie_manager.episode.application.service.SearchEpisodeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -64,4 +65,11 @@ public class SearchEpisodeRestController implements SearchEpisodeAPI {
         return seasonNumber;
     }
 
+    @Override
+    public SeriesStatisticsResponse getSeriesStatistics(String title) {
+        log.info("[start] SearchEpisodeRestController - getSeriesStatistics");
+        SeriesStatisticsResponse statistics = searchEpisodeService.findStatisticsByTitle(title);
+        log.info("[finish] SearchEpisodeRestController - getSeriesStatistics");
+        return statistics;
+    }
 }

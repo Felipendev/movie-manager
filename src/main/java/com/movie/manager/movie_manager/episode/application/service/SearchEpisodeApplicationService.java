@@ -2,9 +2,12 @@ package com.movie.manager.movie_manager.episode.application.service;
 
 import com.movie.manager.movie_manager.episode.application.response.EpisodeResponse;
 import com.movie.manager.movie_manager.episode.application.response.SeasonResponse;
+import com.movie.manager.movie_manager.episode.application.response.SeriesStatisticsResponse;
 import com.movie.manager.movie_manager.episode.domain.Episode;
 import com.movie.manager.movie_manager.handler.APIException;
 import com.movie.manager.movie_manager.infra.api.EpisodeFeignClient;
+import com.movie.manager.movie_manager.series.application.response.SeriesResponse;
+import com.movie.manager.movie_manager.series.application.service.SearchSeriesApplicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +28,7 @@ import java.util.stream.IntStream;
 @Log4j2
 public class SearchEpisodeApplicationService implements SearchEpisodeService {
     private final EpisodeFeignClient episodeFeignClient;
+    private final SearchSeriesApplicationService searchSeriesApplicationService;
 
     @Value("${omdb.episode.apikey}")
     private String API_KEY;
@@ -52,7 +56,7 @@ public class SearchEpisodeApplicationService implements SearchEpisodeService {
         List<SeasonResponse> seasons = getSeasonResponses(title, totalSeasons);
         List<EpisodeResponse> episodes = extractEpisodesFromSeasons(seasons).stream()
                 .filter(episodeResponse -> {
-                    Episode episode = new Episode(seasons.get(0).numero(), episodeResponse);
+                    Episode episode = new Episode(seasons.get(0).getSeason(), episodeResponse);
                     return episode.getYeah() != null && episode.getYeah().isAfter(date);
                 })
                 .collect(Collectors.toList());
@@ -65,8 +69,8 @@ public class SearchEpisodeApplicationService implements SearchEpisodeService {
         log.info("[start] SearchEpisodeApplicationService - getEpisodesByRating");
         List<SeasonResponse> seasons = getSeasonResponses(title, totalSeasons);
         List<Episode> episodes = seasons.stream()
-                .flatMap(seasonResponse -> seasonResponse.episodios().stream()
-                        .map(episodeResponse -> new Episode(seasonResponse.numero(), episodeResponse)))
+                .flatMap(seasonResponse -> seasonResponse.getEpisodes().stream()
+                        .map(episodeResponse -> new Episode(seasonResponse.getSeason(), episodeResponse)))
                 .toList();
 
         List<EpisodeResponse> topFiveEpisodes = episodes.stream()   
@@ -83,8 +87,8 @@ public class SearchEpisodeApplicationService implements SearchEpisodeService {
         log.info("[start] SearchEpisodeApplicationService - findSeasonByEpisodeTitle");
         List<SeasonResponse> seasons = getSeasonResponses(title, totalSeasons);
         Optional<Episode> matchingEpisode = seasons.stream()
-                        .flatMap(seasonResponse -> seasonResponse.episodios().stream()
-                                .map(episodeResponse -> new Episode(seasonResponse.numero(), episodeResponse)))
+                        .flatMap(seasonResponse -> seasonResponse.getEpisodes().stream()
+                                .map(episodeResponse -> new Episode(seasonResponse.getSeason(), episodeResponse)))
                                 .filter(episode -> episode.getTitle().equalsIgnoreCase(episodeTitle))
                                         .findFirst();
         log.info("[finish] SearchEpisodeApplicationService - findSeasonByEpisodeTitle");
@@ -107,11 +111,11 @@ public class SearchEpisodeApplicationService implements SearchEpisodeService {
     }
 
     private AbstractMap.SimpleEntry<Integer, Double> calculateAverageRating(SeasonResponse season) {
-        double averageRating = season.episodios().stream()
+        double averageRating = season.getEpisodes().stream()
                 .mapToDouble(this::parseRating)
                 .average()
                 .orElse(0.0);
-        return new AbstractMap.SimpleEntry<>(season.numero(), averageRating);
+        return new AbstractMap.SimpleEntry<>(season.getSeason(), averageRating);
     }
 
     private double parseRating(EpisodeResponse episode) {
@@ -130,9 +134,77 @@ public class SearchEpisodeApplicationService implements SearchEpisodeService {
 
     private List<EpisodeResponse> extractEpisodesFromSeasons(List<SeasonResponse> seasons) {
         return seasons.stream()
-                .flatMap(seasonResponse -> seasonResponse.episodios().stream()
-                        .map(episode -> new Episode(seasonResponse.numero(), episode))
+                .flatMap(seasonResponse -> seasonResponse.getEpisodes().stream()
+                        .map(episode -> new Episode(seasonResponse.getSeason(), episode))
                         .map(EpisodeResponse::fromEpisode))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public SeriesStatisticsResponse findStatisticsByTitle(String title) {
+        log.info("[start] SearchEpisodeApplicationService - findStatisticsByTitle");
+
+        List<Episode> episodes = retrieveEpisodes(title);
+
+        if (episodes.isEmpty()) {
+            return createEmptyStatisticsResponse(title);
+        }
+
+        SeriesStatisticsResponse statisticsResponse = buildStatisticsResponse(title, episodes);
+
+        log.info("[finish] SearchEpisodeApplicationService - findStatisticsByTitle");
+        return statisticsResponse;
+    }
+
+    private List<Episode> retrieveEpisodes(String title) {
+        SeriesResponse seriesInfo = searchSeriesApplicationService.findSerieByTitle(title);
+        int totalSeasons = seriesInfo.getTotalSeasons();
+
+        return IntStream.rangeClosed(1, totalSeasons)
+                .mapToObj(seasonNum -> episodeFeignClient.findByTitle(API_KEY, title, seasonNum))
+                .flatMap(seasonResponse -> seasonResponse.getEpisodes().stream()
+                        .map(episodeResponse -> new Episode(seasonResponse.getSeason(), episodeResponse)))
+                .filter(episode -> episode.getRating() > 0.0)
+                .collect(Collectors.toList());
+    }
+
+    private SeriesStatisticsResponse buildStatisticsResponse(String title, List<Episode> episodes) {
+        Optional<Episode> highestRatedEpisode = findHighestRatedEpisode(episodes);
+        Optional<Episode> lowestRatedEpisode = findLowestRatedEpisode(episodes);
+        double averageRating = calculateAverageRating(episodes);
+        long totalRatedEpisodes = episodes.size();
+
+        return new SeriesStatisticsResponse(
+                title,
+                highestRatedEpisode.map(Episode::getEpisodeNumber).orElse(0),
+                lowestRatedEpisode.map(Episode::getEpisodeNumber).orElse(0),
+                averageRating,
+                totalRatedEpisodes
+        );
+    }
+
+    private Optional<Episode> findHighestRatedEpisode(List<Episode> episodes) {
+        return episodes.stream().max(Comparator.comparing(Episode::getRating));
+    }
+
+    private Optional<Episode> findLowestRatedEpisode(List<Episode> episodes) {
+        return episodes.stream().min(Comparator.comparing(Episode::getRating));
+    }
+
+    private double calculateAverageRating(List<Episode> episodes) {
+        return episodes.stream()
+                .mapToDouble(Episode::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
+    private SeriesStatisticsResponse createEmptyStatisticsResponse(String title) {
+        return new SeriesStatisticsResponse(
+                title,
+                0,
+                0,
+                0.0,
+                0
+        );
     }
 }

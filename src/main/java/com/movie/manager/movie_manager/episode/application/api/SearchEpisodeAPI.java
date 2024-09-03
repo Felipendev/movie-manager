@@ -3,6 +3,7 @@ package com.movie.manager.movie_manager.episode.application.api;
 
 import com.movie.manager.movie_manager.episode.application.response.EpisodeResponse;
 import com.movie.manager.movie_manager.episode.application.response.SeasonResponse;
+import com.movie.manager.movie_manager.episode.application.response.SeriesStatisticsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.HttpStatus;
@@ -63,4 +64,10 @@ public interface SearchEpisodeAPI {
             @Parameter(description = "Title of the episode") @PathVariable String episodeTitle,
             @Parameter(description = "Total number of seasons") @RequestParam("totalSeasons") int totalSeasons,
             @Parameter(description = "Title of the series") @RequestParam String title);
+
+
+    @Operation(summary = "Fetches statistics about all episodes in a series.")
+    @GetMapping("/statistics/{title}")
+    @ResponseStatus(HttpStatus.OK)
+    SeriesStatisticsResponse getSeriesStatistics(@Parameter(description = "Title of the series") @RequestParam String title);
 }

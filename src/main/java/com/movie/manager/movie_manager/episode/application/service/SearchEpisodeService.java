@@ -2,6 +2,7 @@ package com.movie.manager.movie_manager.episode.application.service;
 
 import com.movie.manager.movie_manager.episode.application.response.EpisodeResponse;
 import com.movie.manager.movie_manager.episode.application.response.SeasonResponse;
+import com.movie.manager.movie_manager.episode.application.response.SeriesStatisticsResponse;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,4 +14,5 @@ public interface SearchEpisodeService {
     List<EpisodeResponse> getEpisodesByRating(String title, int totalSeasons);
     String findSeasonByEpisodeTitle(String episodeTitle, int totalSeasons, String title);
     List<String> getTopSeasons(String title, int totalSeasons);
+    SeriesStatisticsResponse findStatisticsByTitle(String title);
 }
